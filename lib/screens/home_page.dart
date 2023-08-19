@@ -5,6 +5,7 @@ import 'package:flutter_web/widgets/featured_tiles.dart';
 import 'package:flutter_web/widgets/floating_quick_access_bar.dart';
 import 'package:flutter_web/widgets/main_heading.dart';
 import 'package:flutter_web/widgets/menu_drawer.dart';
+import 'package:flutter_web/widgets/responsive.dart';
 import 'package:flutter_web/widgets/top_bar_contents.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,32 @@ class _HomePageState extends State<HomePage> {
         : 1;
 
     return Scaffold(
-      body: Column(
+      drawer: MenuDrawer(),
+      extendBodyBehindAppBar: true,
+      appBar: ResponsiveWidget.isSmallScreen(context)
+          ? AppBar(
+            iconTheme: IconThemeData(color: Colors.blue),
+              backgroundColor: Colors.white.withOpacity(_opacity),
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                'Author',
+                style: TextStyle(
+                  color: Color(0xFF077bd7),
+                  fontSize: 26,
+                  fontFamily: 'Raleway',
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 3,
+                ),
+              ),
+            )
+          : PreferredSize(
+              preferredSize: Size(screenSize.width, 70),
+              child: TopBarContents(_opacity),
+            ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
           children: [
             Stack(
               children: [
@@ -52,13 +78,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
+                Column(
+                  children: [
+                    FloatingQuickAccessBar(screenSize: screenSize),
+                    FeaturedHeading(screenSize: screenSize),
+                    FeaturedTiles(screenSize: screenSize),
+                    MainHeading(screenSize: screenSize),
+                    MainCarousel(),
+                    SizedBox(height: screenSize.height / 10),
+                    BottomBar(),
+                  ],
+                ),
               ],
             ),
-
           ],
         ),
-
+      ),
     );
   }
 }
